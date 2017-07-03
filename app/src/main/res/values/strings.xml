@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Delivery Service</string>
+    <string name="action_logout">LogOut</string>
+    <string name="register">Welcome Register</string>
 </resources>

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "com.zucc.jjl1130.deliveryservice"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -27,32 +27,21 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile('cn.leancloud.android:avoscloud-push:v4.3.2@aar') { transitive = true }
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'cn.leancloud.android:avoscloud-sdk:v4.3.2'
+    compile 'cn.leancloud.android:avoscloud-statistics:v4.3.2'
+    compile 'cn.leancloud.android:avoscloud-feedback:v4.3.2@aar'
+    compile 'cn.leancloud.android:avoscloud-sns:v4.3.2@aar'
+    compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
+    compile 'cn.leancloud.android:avoscloud-search:v4.3.2@aar'
     testCompile 'junit:junit:4.12'
-
-    // LeanCloud 基础包
-    compile('cn.leancloud.android:avoscloud-sdk:v4.3.2')
-
-    // 推送与实时聊天需要的包
-    compile('cn.leancloud.android:avoscloud-push:v4.3.2@aar') { transitive = true }
-
-    // LeanCloud 统计包
-    compile('cn.leancloud.android:avoscloud-statistics:v4.3.2')
-
-    // LeanCloud 用户反馈包
-    compile('cn.leancloud.android:avoscloud-feedback:v4.3.2@aar')
-
-    // avoscloud-sns：LeanCloud 第三方登录包
-    compile('cn.leancloud.android:avoscloud-sns:v4.3.2@aar')
-    compile('cn.leancloud.android:qq-sdk:1.6.1-leancloud')
-    // 目前新浪微博官方只提供 jar 包的集成方式
-    // 请手动下载新浪微博 SDK 的 jar 包，将其放在 libs 目录下进行集成
-
-    // LeanCloud 应用内搜索包
-    compile('cn.leancloud.android:avoscloud-search:v4.3.2@aar')
+    compile 'com.android.support:design:25.+'
+    compile 'com.jakewharton:butterknife:8.6.0'
+    compile 'com.rengwuxian.materialedittext:library:2.1.4'
 }
