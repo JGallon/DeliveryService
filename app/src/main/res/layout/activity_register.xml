@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context="com.zucc.jjl1130.deliveryservice.RegisterActivity">
-
-    <include layout="@layout/logo" />
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/toolbarlayout"
@@ -20,16 +19,146 @@
             android:layout_height="wrap_content" />
     </android.support.design.widget.AppBarLayout>
 
-    <com.rengwuxian.materialedittext.MaterialEditText
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbarlayout"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:hint="Material Design Icon"
-        app:met_iconLeft="@drawable/ic_account"
-        app:met_iconPadding="0dp"
-        app:met_maxCharacters="5" />
+        android:layout_height="wrap_content">
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="24dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_account" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:hint="Account"
+                    app:met_floatingLabel="highlight"
+                    app:met_maxCharacters="24" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="24dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_password" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/pwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    app:met_floatingLabel="highlight"
+                    app:met_maxCharacters="24" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="24dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_confirm" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/pwd2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:hint="Again"
+                    android:inputType="textPassword"
+                    app:met_floatingLabel="highlight"
+                    app:met_maxCharacters="24" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="24dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_phone" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:hint="Phone"
+                    app:met_floatingLabel="highlight"
+                    app:met_maxCharacters="24" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="24dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_email" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:hint="Email"
+                    app:met_floatingLabel="highlight"
+                    app:met_maxCharacters="24" />
+            </LinearLayout>
+
+            <com.zucc.jjl1130.deliveryservice.StateButton
+                android:id="@+id/register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="24dp"
+                android:padding="10dp"
+                android:text="Register"
+                app:normalStrokeColor="@color/md_red_400"
+                app:normalStrokeWidth="1dp"
+                app:normalTextColor="@color/md_red_400"
+                app:pressedBackgroundColor="@color/md_red_400"
+                app:pressedStrokeColor="@color/md_red_400"
+                app:pressedStrokeWidth="1dp"
+                app:pressedTextColor="@android:color/white"
+                app:radius="5dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/logo" />
+</LinearLayout>
