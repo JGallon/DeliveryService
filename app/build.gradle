@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "com.zucc.jjl1130.deliveryservice"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -32,7 +32,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile('cn.leancloud.android:avoscloud-push:v4.3.2@aar') { transitive = true }
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile('com.mikepenz:materialdrawer:5.9.4@aar') {
+        transitive = true
+    }
+    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:design:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'cn.leancloud.android:avoscloud-sdk:v4.3.2'
     compile 'cn.leancloud.android:avoscloud-statistics:v4.3.2'
@@ -40,8 +44,13 @@ dependencies {
     compile 'cn.leancloud.android:avoscloud-sns:v4.3.2@aar'
     compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
     compile 'cn.leancloud.android:avoscloud-search:v4.3.2@aar'
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:25.+'
     compile 'com.jakewharton:butterknife:8.6.0'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
+    compile 'com.mikepenz:iconics-core:2.8.6@aar'
+    compile 'com.mikepenz:google-material-typeface:3.0.1.0.original@aar'
+    compile 'com.mikepenz:crossfadedrawerlayout:1.0.0@aar'
+    compile 'com.android.support:support-v4:26.+'
+    testCompile 'junit:junit:4.12'
+    compile files('libs/AMap_Location_V3.4.1_20170629.jar')
+    compile files('libs/AMap3DMap_5.2.1_AMapNavi_5.1.0_AMapSearch_5.2.1_AMapLocation_3.4.1_20170630.jar')
 }

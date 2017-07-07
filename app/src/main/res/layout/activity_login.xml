@@ -107,6 +107,20 @@
                     android:text="Register"
                     android:textColor="@color/md_red_400" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:id="@+id/error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/colorPrimaryDark" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

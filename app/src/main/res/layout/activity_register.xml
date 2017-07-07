@@ -157,6 +157,20 @@
                 app:pressedStrokeWidth="1dp"
                 app:pressedTextColor="@android:color/white"
                 app:radius="5dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:id="@+id/error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/colorPrimaryDark" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
