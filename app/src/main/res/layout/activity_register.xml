@@ -174,5 +174,5 @@
         </LinearLayout>
     </ScrollView>
 
-    <include layout="@layout/logo" />
+    <!--<include layout="@layout/logo" />-->
 </LinearLayout>

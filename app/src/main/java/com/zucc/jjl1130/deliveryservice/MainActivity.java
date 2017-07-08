@@ -8,12 +8,14 @@ import android.widget.Button;
 
 import com.avos.avoscloud.AVOSCloud;
 
+import butterknife.BindView;
+
 public class MainActivity extends AppCompatActivity {
 
-//    @BindView(R.id.btn_in)
-//    Button btn;
-private static final int WRITE_COARSE_LOCATION_REQUEST_CODE = 100;
+    //    private static final int WRITE_COARSE_LOCATION_REQUEST_CODE = 100;
     public static MainActivity instance = null;
+    @BindView(R.id.btn_in)
+    Button btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

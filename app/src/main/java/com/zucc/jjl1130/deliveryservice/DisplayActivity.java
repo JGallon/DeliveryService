@@ -1,11 +1,15 @@
 package com.zucc.jjl1130.deliveryservice;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +35,7 @@ import com.mikepenz.materialdrawer.util.DrawerUIUtils;
 import com.mikepenz.materialize.util.UIUtils;
 
 public class DisplayActivity extends AppCompatActivity {
+    private static final int WRITE_COARSE_LOCATION_REQUEST_CODE = 100;
     private AccountHeader headerResult = null;
     private Drawer result = null;
     private CrossfadeDrawerLayout crossfadeDrawerLayout = null;
@@ -39,9 +44,17 @@ public class DisplayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
+        initGPS();
+
+
+
+
+
+
+
+
         final BlankFragment test = new BlankFragment();
         final WelcomeFragment welcomeFragment = new WelcomeFragment();
-        final AddFragment addFragment = new AddFragment();
         setDefaultFragment(welcomeFragment);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        TextView userid = (TextView) findViewById(R.id.userid);
@@ -106,10 +119,13 @@ public class DisplayActivity extends AppCompatActivity {
                         } else if (drawerItem.getIdentifier() == 2) {
 
                         } else if (drawerItem.getIdentifier() == 3) {
+                            AddFragment addFragment = new AddFragment();
                             transaction.replace(R.id.frame_container, addFragment);
                             transaction.commit();
                         } else if (drawerItem.getIdentifier() == 4) {
-
+                            GetFragment getFragment = new GetFragment();
+                            transaction.replace(R.id.frame_container, getFragment);
+                            transaction.commit();
                         } else if (drawerItem.getIdentifier() == 5) {
 
                         } else if (drawerItem.getIdentifier() == 6) {
@@ -222,6 +238,15 @@ public void onCrossfade(View containerView, float currentSlidePercentage, int sl
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.frame_container, welcomeFragment);
         transaction.commit();
+    }
+
+    public void initGPS() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            //申请WRITE_EXTERNAL_STORAGE权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    WRITE_COARSE_LOCATION_REQUEST_CODE);//自定义的code
+        }
     }
 
 }

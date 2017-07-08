@@ -35,6 +35,8 @@ dependencies {
     compile('com.mikepenz:materialdrawer:5.9.4@aar') {
         transitive = true
     }
+    compile files('libs/AMap_Location_V3.4.1_20170629.jar')
+    compile files('libs/AMap3DMap_5.2.1_AMapNavi_5.1.0_AMapSearch_5.2.1_AMapLocation_3.4.1_20170630.jar')
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:design:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -51,6 +53,4 @@ dependencies {
     compile 'com.mikepenz:crossfadedrawerlayout:1.0.0@aar'
     compile 'com.android.support:support-v4:26.+'
     testCompile 'junit:junit:4.12'
-    compile files('libs/AMap_Location_V3.4.1_20170629.jar')
-    compile files('libs/AMap3DMap_5.2.1_AMapNavi_5.1.0_AMapSearch_5.2.1_AMapLocation_3.4.1_20170630.jar')
 }
