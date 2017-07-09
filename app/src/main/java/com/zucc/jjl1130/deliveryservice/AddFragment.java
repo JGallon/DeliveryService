@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.ListPopupWindow;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,7 +20,21 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.geocoder.GeocodeAddress;
+import com.amap.api.services.geocoder.GeocodeQuery;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeAddress;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
+import com.amap.api.services.poisearch.PoiResult;
+import com.amap.api.services.poisearch.PoiSearch;
 import com.rengwuxian.materialedittext.MaterialEditText;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddFragment extends Fragment {
 
@@ -27,12 +42,53 @@ public class AddFragment extends Fragment {
     private ListPopupWindow listPopupWindow = null;
     private MaterialEditText edt = null;
     private AMap aMap = null;
-    private String[] list = {"item1", "item2", "item3", "item4"};
+    //    private String[] list = {"item1", "item2", "item3", "item4"};
+    private ArrayList<String> list = null;
+    private GeocodeSearch geocodeSearch = null;
+    private PoiSearch poiSearch = null;
+    private Double latitude = -1.0;
+    private Double longitude = -1.0;
+    private Double relatitude = -1.0;
+    private Double relongitude = -1.0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add, container, false);
+        list = new ArrayList<>();
+        list.add("item");
+        geocodeSearch = new GeocodeSearch(getContext());
+        geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
+            @Override
+            public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+                RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
+                edt.setText(regeocodeAddress.getCity() + " " + regeocodeAddress.getDistrict());
+            }
+
+            @Override
+            public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+                List<GeocodeAddress> res = geocodeResult.getGeocodeAddressList();
+                Log.e("size", res.size() + "");
+//                list.clear();
+//                for (int j = 0; j < Math.min(14, res.size()); j++) {
+//                    GeocodeAddress g = res.get(j);
+//                    String s = g.getProvince() + g.getCity() + g.getDistrict() + g.getBuilding();
+//                    Log.e("list", s);
+//                    list.add(s);
+//                }
+                GeocodeAddress g = res.get(0);
+                LatLonPoint latLonPoint = g.getLatLonPoint();
+                longitude = latLonPoint.getLongitude();
+                latitude = latLonPoint.getLatitude();
+                LatLng latLng = new LatLng(latitude, longitude);
+                aMap.clear();
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_click_position));
+                markerOptions.position(latLng);
+                aMap.addMarker(markerOptions);
+                aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
+            }
+        });
         edt = (MaterialEditText) view.findViewById(R.id.point);
         edt.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -45,6 +101,34 @@ public class AddFragment extends Fragment {
                     if (motionEvent.getX() >= (edt.getWidth() - edt
                             .getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         // your action here
+                        if (edt.getText().toString().equals("")) {
+                            list.clear();
+                            list.add("item");
+                        } else {
+                            PoiSearch.Query query = new PoiSearch.Query(edt.getText().toString(), "", "");
+                            query.setPageSize(14);// 设置每页最多返回多少条poiitem
+                            query.setPageNum(0);//设置查询页码
+                            PoiSearch poiSearch = new PoiSearch(getContext(), query);
+                            poiSearch.setOnPoiSearchListener(new PoiSearch.OnPoiSearchListener() {
+                                @Override
+                                public void onPoiSearched(PoiResult poiResult, int i) {
+                                    int pagenum = poiResult.getPageCount();
+                                    ArrayList<PoiItem> tmp = poiResult.getPois();
+                                    list.clear();
+                                    for (int j = 0; j < tmp.size(); j++) {
+                                        PoiItem item = tmp.get(j);
+                                        String s = item.getProvinceName() + item.toString();
+                                        list.add(s);
+                                    }
+                                }
+
+                                @Override
+                                public void onPoiItemSearched(PoiItem poiItem, int i) {
+
+                                }
+                            });
+                            poiSearch.searchPOIAsyn();
+                        }
                         showListPopulWindow();
                         edt.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.arrow_up), null);
                         return true;
@@ -63,7 +147,7 @@ public class AddFragment extends Fragment {
 
         MyLocationStyle myLocationStyle;
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW);
         myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.showMyLocation(true);
@@ -85,9 +169,12 @@ public class AddFragment extends Fragment {
                 markerOptions.position(latLng);
                 aMap.addMarker(markerOptions);
                 aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
-                double latitude = latLng.latitude;
-                double longitude = latLng.longitude;
-                edt.setText("lat:" + latitude + " lon:" + longitude);
+                relatitude = latLng.latitude;
+                relongitude = latLng.longitude;
+//                edt.setText("lat:" + latitude + " lon:" + longitude);
+                LatLonPoint latLonPoint = new LatLonPoint(relatitude, relongitude);
+                RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 200, GeocodeSearch.AMAP);
+                geocodeSearch.getFromLocationAsyn(query);
             }
         });
         return view;
@@ -131,7 +218,9 @@ public class AddFragment extends Fragment {
         listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                edt.setText(list[i]);
+                edt.setText(list.get(i));
+                GeocodeQuery query = new GeocodeQuery(edt.getText().toString(), "");
+                geocodeSearch.getFromLocationNameAsyn(query);
                 edt.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.arrow_down), null);
                 listPopupWindow.dismiss();
             }
