@@ -45,14 +45,6 @@ public class DisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
         initGPS();
-
-
-
-
-
-
-
-
         final BlankFragment test = new BlankFragment();
         final WelcomeFragment welcomeFragment = new WelcomeFragment();
         setDefaultFragment(welcomeFragment);
@@ -127,7 +119,7 @@ public class DisplayActivity extends AppCompatActivity {
                             transaction.replace(R.id.frame_container, getFragment);
                             transaction.commit();
                         } else if (drawerItem.getIdentifier() == 5) {
-
+                            result.setSelection(4, true);
                         } else if (drawerItem.getIdentifier() == 6) {
 
                         } else if (drawerItem.getIdentifier() == 7) {

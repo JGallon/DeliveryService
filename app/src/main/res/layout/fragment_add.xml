@@ -37,68 +37,93 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginTop="24dp">
+                android:layout_height="match_parent">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_start" />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/point"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:drawableRight="@drawable/ic_arrow_down_o"
-                    android:hint="Point"
-                    app:met_floatingLabel="highlight"
-                    app:met_maxCharacters="24" />
-            </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginTop="24dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:layout_marginRight="24dp"
+                        android:layout_marginTop="24dp">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_detail" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_start" />
 
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:hint="Detail"
-                    app:met_floatingLabel="highlight"
-                    app:met_maxCharacters="24" />
-            </LinearLayout>
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/point"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:drawableRight="@drawable/ic_arrow_down_o"
+                            android:hint="Point"
+                            app:met_floatingLabel="highlight"
+                            app:met_maxCharacters="24" />
+                    </LinearLayout>
 
-            <com.zucc.jjl1130.deliveryservice.StateButton
-                android:id="@+id/addOrder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginTop="24dp"
-                android:padding="10dp"
-                android:text="Add"
-                app:normalStrokeColor="@color/md_red_400"
-                app:normalStrokeWidth="1dp"
-                app:normalTextColor="@color/md_red_400"
-                app:pressedBackgroundColor="@color/md_red_400"
-                app:pressedStrokeColor="@color/md_red_400"
-                app:pressedStrokeWidth="1dp"
-                app:pressedTextColor="@android:color/white"
-                app:radius="5dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:layout_marginRight="24dp"
+                        android:layout_marginTop="24dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_detail" />
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/detail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:hint="Detail"
+                            app:met_floatingLabel="highlight"
+                            app:met_maxCharacters="24" />
+                    </LinearLayout>
+
+                    <com.zucc.jjl1130.deliveryservice.StateButton
+                        android:id="@+id/addOrder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:layout_marginRight="24dp"
+                        android:layout_marginTop="24dp"
+                        android:padding="10dp"
+                        android:text="Add"
+                        app:normalStrokeColor="@color/md_red_400"
+                        app:normalStrokeWidth="1dp"
+                        app:normalTextColor="@color/md_red_400"
+                        app:pressedBackgroundColor="@color/md_red_400"
+                        app:pressedStrokeColor="@color/md_red_400"
+                        app:pressedStrokeWidth="1dp"
+                        app:pressedTextColor="@android:color/white"
+                        app:radius="5dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="16dp">
+
+                        <TextView
+                            android:id="@+id/error"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/colorPrimaryDark" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
     </LinearLayout>
     <!--<include layout="@layout/logo"/>-->

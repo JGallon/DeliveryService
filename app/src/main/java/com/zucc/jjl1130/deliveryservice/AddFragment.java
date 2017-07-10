@@ -12,8 +12,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -31,6 +34,10 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.SaveCallback;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
@@ -38,6 +45,7 @@ import java.util.List;
 
 public class AddFragment extends Fragment {
 
+    private static Double price = 0.005;
     private MapView mMapView = null;
     private ListPopupWindow listPopupWindow = null;
     private MaterialEditText edt = null;
@@ -48,8 +56,13 @@ public class AddFragment extends Fragment {
     private PoiSearch poiSearch = null;
     private Double latitude = -1.0;
     private Double longitude = -1.0;
-    private Double relatitude = -1.0;
-    private Double relongitude = -1.0;
+    //    private Double relatitude = -1.0;
+//    private Double relongitude = -1.0;
+    private Double mylat = -1.0;
+    private Double mylng = -1.0;
+    private StateButton btn = null;
+    private MaterialEditText edt_de = null;
+    private TextView errortxt = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +75,7 @@ public class AddFragment extends Fragment {
             @Override
             public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
                 RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
-                edt.setText(regeocodeAddress.getCity() + " " + regeocodeAddress.getDistrict());
+                edt.setText(regeocodeAddress.getCity() + regeocodeAddress.getDistrict() + regeocodeAddress.getTownship() + regeocodeAddress.getNeighborhood());
             }
 
             @Override
@@ -87,6 +100,51 @@ public class AddFragment extends Fragment {
                 markerOptions.position(latLng);
                 aMap.addMarker(markerOptions);
                 aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
+                Log.e("poi", longitude + ":" + latitude);
+            }
+        });
+        errortxt = (TextView) view.findViewById(R.id.error);
+        edt_de = (MaterialEditText) view.findViewById(R.id.detail);
+        btn = (StateButton) view.findViewById(R.id.addOrder);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (edt.getText().toString().equals("") || edt_de.getText().toString().equals("")) {
+                    errortxt.setText("the content can not be blank");
+                    return;
+                }
+                AVObject object = new AVObject("Order");
+                object.put("user", AVUser.getCurrentUser().getObjectId());
+                object.put("username", AVUser.getCurrentUser().getUsername());
+                object.put("courier", "null");
+                object.put("couriername", "null");
+                object.put("state", 0);
+                object.put("description", edt.getText().toString());
+                object.put("detail", edt_de.getText().toString());
+                object.put("endlng", mylng);
+                object.put("endlat", mylat);
+                object.put("startlng", longitude);
+                object.put("startlat", latitude);
+                LatLng latLng1 = new LatLng(mylat, mylng);
+                LatLng latLng2 = new LatLng(latitude, longitude);
+                Double pay = AMapUtils.calculateLineDistance(latLng1, latLng2) * price;
+                object.put("pay", pay);
+//                Date date = new Date();
+                object.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (e == null) {
+                            Log.d("saved", "success!");
+                            Toast.makeText(getContext(), "add successfully!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                aMap.clear();
+                edt_de.setText("");
+                edt.setText("");
+                //0 未接 1 已接 2 快递员确认送达 3 完成
+                // 跳转
+
             }
         });
         edt = (MaterialEditText) view.findViewById(R.id.point);
@@ -156,6 +214,8 @@ public class AddFragment extends Fragment {
             @Override
             public void onMyLocationChange(Location location) {
 //                Log.e("locarion", location.getAltitude() + " " + location.getLongitude() + " " + location.getLatitude());
+                mylat = location.getLatitude();
+                mylng = location.getLongitude();
             }
         });
         aMap.getUiSettings().setMyLocationButtonEnabled(true);//设置默认定位按钮是否显示，非必需设置。
@@ -169,10 +229,10 @@ public class AddFragment extends Fragment {
                 markerOptions.position(latLng);
                 aMap.addMarker(markerOptions);
                 aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
-                relatitude = latLng.latitude;
-                relongitude = latLng.longitude;
+                latitude = latLng.latitude;
+                longitude = latLng.longitude;
 //                edt.setText("lat:" + latitude + " lon:" + longitude);
-                LatLonPoint latLonPoint = new LatLonPoint(relatitude, relongitude);
+                LatLonPoint latLonPoint = new LatLonPoint(latitude, longitude);
                 RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 200, GeocodeSearch.AMAP);
                 geocodeSearch.getFromLocationAsyn(query);
             }
