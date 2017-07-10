@@ -22,10 +22,17 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeAddress;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 public class GetDetailActivity extends AppCompatActivity {
 
@@ -54,7 +61,7 @@ public class GetDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         Intent intent = this.getIntent();
-        BeanOrder beanOrder = (BeanOrder) intent.getSerializableExtra("order");
+        final BeanOrder beanOrder = (BeanOrder) intent.getSerializableExtra("order");
         TextView original = (TextView) findViewById(R.id.original);
         final TextView terminal = (TextView) findViewById(R.id.terminal);
         TextView salary = (TextView) findViewById(R.id.salary);
@@ -62,10 +69,32 @@ public class GetDetailActivity extends AppCompatActivity {
         TextView client = (TextView) findViewById(R.id.user);
         TextView date = (TextView) findViewById(R.id.date);
         StateButton btn = (StateButton) findViewById(R.id.getOrder);
+        final TextView errortxt = (TextView) findViewById(R.id.error);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                AVQuery<AVObject> query = new AVQuery<>("Order");
+                query.whereEqualTo("objectId", beanOrder.getOrederID());
+                query.findInBackground(new FindCallback<AVObject>() {
+                    @Override
+                    public void done(List<AVObject> list, AVException e) {
+                        AVObject tmp = list.get(0);
+                        if (tmp.getInt("state") == 0) {
+                            AVObject upload = AVObject.createWithoutData("Order", beanOrder.getOrederID());
+                            upload.put("couriername", AVUser.getCurrentUser().getUsername());
+                            upload.put("courier", AVUser.getCurrentUser().getObjectId());
+                            upload.put("state", 1);
+                            upload.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(AVException e) {
+                                    errortxt.setText("pick up successfully!");
+                                }
+                            });
+                        } else {
+                            errortxt.setText("This order has been picked up!");
+                        }
+                    }
+                });
             }
         });
         double lng = beanOrder.getEndlng();
@@ -118,6 +147,7 @@ public class GetDetailActivity extends AppCompatActivity {
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
         MarkerOptions start_markerOptions = new MarkerOptions();
+//        start_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_start_point));
         start_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_start_point));
         LatLng start_latLng = new LatLng(beanOrder.getStartlat(), beanOrder.getStartlng());
         start_markerOptions.position(start_latLng);

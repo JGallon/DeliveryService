@@ -24,11 +24,8 @@ public class GetFragment extends Fragment {
     private List<BeanOrder> orderlist = null;
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_get, container, false);
-        listview = (RecyclerView) view.findViewById(R.id.get_list);
+    public void onResume() {
+        super.onResume();
         orderlist = new ArrayList<>();
         AVQuery<AVObject> query = new AVQuery<>("Order");
         query.whereEqualTo("state", 0);
@@ -70,6 +67,14 @@ public class GetFragment extends Fragment {
                 listview.setAdapter(getAdapter);
             }
         });
+    }
+
+    @Override
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_get, container, false);
+        listview = (RecyclerView) view.findViewById(R.id.get_list);
         return view;
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,10 +14,18 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.SaveCallback;
 import com.mikepenz.crossfadedrawerlayout.view.CrossfadeDrawerLayout;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -36,9 +45,17 @@ import com.mikepenz.materialize.util.UIUtils;
 
 public class DisplayActivity extends AppCompatActivity {
     private static final int WRITE_COARSE_LOCATION_REQUEST_CODE = 100;
+    //声明AMapLocationClient类对象
+    private AMapLocationClient mLocationClient = null;
+    //声明定位回调监听器
+//    private AMapLocationListener mLocationListener = null;
+    //声明AMapLocationClientOption对象
+    private AMapLocationClientOption mLocationOption = null;
     private AccountHeader headerResult = null;
     private Drawer result = null;
     private CrossfadeDrawerLayout crossfadeDrawerLayout = null;
+    private double mylng = -1.0;
+    private double mylat = -1.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +78,78 @@ public class DisplayActivity extends AppCompatActivity {
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("DS");
+
+//        mLocationListener = new AMapLocationListener() {
+//            @Override
+//            public void onLocationChanged(AMapLocation aMapLocation) {
+//
+//            }
+//        };
+        //初始化定位
+        mLocationClient = new AMapLocationClient(getApplicationContext());
+        //设置定位回调监听
+        mLocationClient.setLocationListener(new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation aMapLocation) {
+                if (aMapLocation != null) {
+                    if (aMapLocation.getErrorCode() == 0) {
+                        //可在其中解析amapLocation获取相应内容。
+                        mylng = aMapLocation.getLongitude();
+                        mylat = aMapLocation.getLatitude();
+                        Log.e("position", mylng + ":" + mylat);
+                    } else {
+                        //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+                        Log.e("AmapError", "location Error, ErrCode:"
+                                + aMapLocation.getErrorCode() + ", errInfo:"
+                                + aMapLocation.getErrorInfo());
+                    }
+                }
+            }
+        });
+        //初始化AMapLocationClientOption对象
+        mLocationOption = new AMapLocationClientOption();
+        //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //设置定位间隔,单位毫秒,默认为2000ms，最低1000ms。
+        mLocationOption.setInterval(2000);
+        //设置是否返回地址信息（默认返回地址信息）
+//        mLocationOption.setNeedAddress(true);
         // Create a few sample profile
+        //设置是否强制刷新WIFI，默认为true，强制刷新。
+//        mLocationOption.setWifiActiveScan(false);
+        //设置是否允许模拟位置,默认为true，允许模拟位置
+        mLocationOption.setMockEnable(false);
+        //单位是毫秒，默认30000毫秒，建议超时时间不要低于8000毫秒。
+        mLocationOption.setHttpTimeOut(30000);
+        //关闭缓存机制
+        mLocationOption.setLocationCacheEnable(false);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        //启动定位
+        mLocationClient.startLocation();
+//        目前手机设备在长时间黑屏或锁屏时CPU会休眠，这导致定位SDK不能正常进行位置更新。若您有锁屏状态下获取位置的需求，您可以应用alarmManager实现1个可叫醒CPU的Timer，定时请求定位。
+
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                AVObject upload = AVObject.createWithoutData("_User", AVUser.getCurrentUser().getObjectId());
+                upload.put("lng", mylng);
+                upload.put("lat", mylat);
+                upload.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (e == null) {
+                            Log.d("upload", "success!");
+                        }
+                    }
+                });
+                handler.postDelayed(this, 4000);// 4s 上传一次
+            }
+        };
+        handler.postDelayed(runnable, 4000);//每4s执行一次runnable.
+//        handler.removeCallbacks(runnable);
+
         // NOTE you have to define the loader logic too. See the CustomApplication for more details
         final IProfile profile = new ProfileDrawerItem().withName(currentUser.getUsername()).withEmail(currentUser.getEmail()).withIcon(R.drawable.ic_man);
 //        final IProfile profile2 = new ProfileDrawerItem().withName("Bernat Borras").withEmail("alorma@github.com").withIcon(Uri.parse("https://avatars3.githubusercontent.com/u/887462?v=3&s=460"));
@@ -126,6 +214,8 @@ public class DisplayActivity extends AppCompatActivity {
                             AVUser.logOut();
                             startActivity(new Intent(DisplayActivity.this, LoginActivity.class));
                             DisplayActivity.this.finish();
+//                            mLocationClient.stopLocation();//停止定位后，本地定位服务并不会被销毁
+//                            mLocationClient.onDestroy();//销毁定位客户端，同时销毁本地定位服务。
                         } else if (drawerItem.getIdentifier() == 8) {
                             transaction.replace(R.id.frame_container, welcomeFragment);
                             transaction.commit();
