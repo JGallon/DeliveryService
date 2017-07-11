@@ -23,6 +23,7 @@
     <!-- 用于申请获取蓝牙信息进行室内定位 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <!-- android:windowSoftInputMode="stateVisible|adjustResize" -->
     <!-- 基础模块 END -->
     <application
@@ -70,7 +71,8 @@
         <activity
             android:name=".DisplayActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".GetDetailActivity"></activity>
+        <activity android:name=".GetDetailActivity" />
+        <activity android:name=".OrderDetailActivity"></activity>
     </application>
 
 </manifest>

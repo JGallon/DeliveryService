@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -69,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
 //                user.put("password", pwd.getText().toString());
 //                user.put("email", email.getText().toString());
 //                user.put("phone", phone.getText().toString());
-                AVUser user = new AVUser();
+                final AVUser user = new AVUser();
                 user.setEmail(email.getText().toString());
                 user.setPassword(pwd.getText().toString());
                 user.setUsername(account.getText().toString());
@@ -79,6 +80,19 @@ public class RegisterActivity extends AppCompatActivity {
                     public void done(AVException e) {
                         if (e == null) {
                             errortxt.setText("register success");
+                            final AVObject pos = new AVObject("Position");
+                            pos.put("userID", user.getObjectId());
+                            pos.put("username", account.getText().toString());
+                            pos.put("lng", 0.0);
+                            pos.put("lat", 0.0);
+                            pos.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(AVException e) {
+                                    AVObject upload = AVObject.createWithoutData("_User", user.getObjectId());
+                                    upload.put("positionID", pos.getObjectId());
+                                    upload.saveInBackground();
+                                }
+                            });
                             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             RegisterActivity.this.finish();
                         } else {

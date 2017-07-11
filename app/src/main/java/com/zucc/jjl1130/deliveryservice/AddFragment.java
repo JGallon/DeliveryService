@@ -125,6 +125,9 @@ public class AddFragment extends Fragment {
                 object.put("endlat", mylat);
                 object.put("startlng", longitude);
                 object.put("startlat", latitude);
+                object.put("rate", 0.0);
+                object.put("flag", 0);
+                object.put("comment", "null");
                 LatLng latLng1 = new LatLng(mylat, mylng);
                 LatLng latLng2 = new LatLng(latitude, longitude);
                 Double pay = AMapUtils.calculateLineDistance(latLng1, latLng2) * price;

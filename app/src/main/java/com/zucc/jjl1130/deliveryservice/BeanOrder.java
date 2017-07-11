@@ -22,6 +22,33 @@ public class BeanOrder implements Serializable {
     private double pay;
     private Date createdate;
     private Date finishdate;
+    private int flag;
+    private double rate;
+    private String comment;
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
     public String getOrederID() {
         return orederID;

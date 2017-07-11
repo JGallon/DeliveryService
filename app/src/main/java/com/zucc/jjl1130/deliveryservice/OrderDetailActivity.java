@@ -3,10 +3,14 @@ package com.zucc.jjl1130.deliveryservice;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
@@ -25,19 +29,19 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class GetDetailActivity extends AppCompatActivity {
+public class OrderDetailActivity extends AppCompatActivity {
 
     private MapView mMapView = null;
     private AMap aMap = null;
+    private int state = -1;
+    private int flag = -1;
 
 
     @Override
@@ -49,7 +53,7 @@ public class GetDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_get_detail);
+        setContentView(R.layout.activity_order_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.md_white_1000));
@@ -64,37 +68,61 @@ public class GetDetailActivity extends AppCompatActivity {
         final BeanOrder beanOrder = (BeanOrder) intent.getSerializableExtra("order");
         TextView original = (TextView) findViewById(R.id.original);
         final TextView terminal = (TextView) findViewById(R.id.terminal);
-        TextView salary = (TextView) findViewById(R.id.salary);
+        final TextView salary = (TextView) findViewById(R.id.salary);
         TextView note = (TextView) findViewById(R.id.note);
-        TextView client = (TextView) findViewById(R.id.user);
+        TextView courier = (TextView) findViewById(R.id.courier);
         TextView date = (TextView) findViewById(R.id.date);
-        StateButton btn = (StateButton) findViewById(R.id.getOrder);
+        StateButton btn = (StateButton) findViewById(R.id.button);
         final TextView errortxt = (TextView) findViewById(R.id.error);
+        LinearLayout ratingbarlayout = (LinearLayout) findViewById(R.id.ratingbarlayout);
+        RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar_order);
+        TextView ratinginfo = (TextView) findViewById(R.id.order_rating_info);
+        LinearLayout commentlayout = (LinearLayout) findViewById(R.id.commentlayout);
+        TextView comment = (TextView) findViewById(R.id.comment);
+        TextView statetxt = (TextView) findViewById(R.id.state);
+        ImageView chat = (ImageView) findViewById(R.id.chat);
+        state = beanOrder.getState();
+        flag = beanOrder.getFlag();
+        if (state == 1) {
+            statetxt.setText("Transporting");
+            btn.setVisibility(View.GONE);
+        } else if (state == 2) {
+            btn.setText("Confirm");
+            statetxt.setText("arrived");
+        } else if (state == 3) {
+            statetxt.setText("finished");
+            commentlayout.setVisibility(View.VISIBLE);
+            ratingbarlayout.setVisibility(View.VISIBLE);
+            if (flag == 1) {
+                btn.setVisibility(View.GONE);
+                ratingBar.setRating((float) beanOrder.getRate());
+                ratinginfo.setText(beanOrder.getRate() + "");
+                comment.setText(beanOrder.getComment());
+            } else {
+                btn.setText("Comment");
+                ratingBar.setRating((float) 0.0);
+                ratinginfo.setText("No ratings");
+                comment.setText("Empty");
+            }
+        } else {
+            chat.setVisibility(View.GONE);
+            statetxt.setText("Waiting");
+            btn.setVisibility(View.GONE);
+        }
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AVQuery<AVObject> query = new AVQuery<>("Order");
-                query.whereEqualTo("objectId", beanOrder.getOrederID());
-                query.findInBackground(new FindCallback<AVObject>() {
-                    @Override
-                    public void done(List<AVObject> list, AVException e) {
-                        AVObject tmp = list.get(0);
-                        if (tmp.getInt("state") == 0) {
-                            AVObject upload = AVObject.createWithoutData("Order", beanOrder.getOrederID());
-                            upload.put("couriername", AVUser.getCurrentUser().getUsername());
-                            upload.put("courier", AVUser.getCurrentUser().getObjectId());
-                            upload.put("state", 1);
-                            upload.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(AVException e) {
-                                    errortxt.setText("pick up successfully!");
-                                }
-                            });
-                        } else {
-                            errortxt.setText("This order has been picked up!");
-                        }
-                    }
-                });
+                if (state == 2) {
+                    //
+                } else if (state == 3) {
+                    // 跳转 commentactivity
+                }
+            }
+        });
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
         double lng = beanOrder.getEndlng();
@@ -119,7 +147,7 @@ public class GetDetailActivity extends AppCompatActivity {
         DecimalFormat df = new DecimalFormat("#.00");
         salary.setText(df.format(beanOrder.getPay()));
         note.setText(beanOrder.getDetail());
-        client.setText(beanOrder.getUsername());
+        courier.setText(beanOrder.getCouriername());
         date.setText(beanOrder.getCreatedate() + "");
         mMapView = (MapView) findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
@@ -130,7 +158,7 @@ public class GetDetailActivity extends AppCompatActivity {
 
         MyLocationStyle myLocationStyle;
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW);
         myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.showMyLocation(true);
@@ -157,7 +185,57 @@ public class GetDetailActivity extends AppCompatActivity {
         LatLng end_latLng = new LatLng(beanOrder.getEndlat(), beanOrder.getEndlng());
         end_markerOptions.position(end_latLng);
         aMap.addMarker(end_markerOptions);
-        aMap.moveCamera(CameraUpdateFactory.changeLatLng(end_latLng));
+        AVQuery<AVObject> posquery = new AVQuery<>("Position");
+        posquery.whereEqualTo("userID", beanOrder.getCourier());
+        posquery.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                AVObject tmp = list.get(0);
+                MarkerOptions courier_markerOptions = new MarkerOptions();
+                courier_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end_point));
+                LatLng courier_latLng = new LatLng(tmp.getDouble("lat"), tmp.getDouble("lng"));
+                courier_markerOptions.position(courier_latLng);
+                aMap.addMarker(courier_markerOptions);
+                aMap.moveCamera(CameraUpdateFactory.changeLatLng(courier_latLng));
+            }
+        });
+//        aMap.moveCamera(CameraUpdateFactory.changeLatLng(end_latLng));
+        if (state == 1) {
+            final Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    aMap.clear();
+                    MarkerOptions start_markerOptions = new MarkerOptions();
+                    start_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_start_point));
+                    LatLng start_latLng = new LatLng(beanOrder.getStartlat(), beanOrder.getStartlng());
+                    start_markerOptions.position(start_latLng);
+                    aMap.addMarker(start_markerOptions);
+                    MarkerOptions end_markerOptions = new MarkerOptions();
+                    end_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end_point));
+                    LatLng end_latLng = new LatLng(beanOrder.getEndlat(), beanOrder.getEndlng());
+                    end_markerOptions.position(end_latLng);
+                    aMap.addMarker(end_markerOptions);
+                    AVQuery<AVObject> posquery = new AVQuery<>("Position");
+                    posquery.whereEqualTo("userID", beanOrder.getCourier());
+                    posquery.findInBackground(new FindCallback<AVObject>() {
+                        @Override
+                        public void done(List<AVObject> list, AVException e) {
+                            AVObject tmp = list.get(0);
+                            MarkerOptions courier_markerOptions = new MarkerOptions();
+                            courier_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end_point));
+                            LatLng courier_latLng = new LatLng(tmp.getDouble("lat"), tmp.getDouble("lng"));
+                            courier_markerOptions.position(courier_latLng);
+                            aMap.addMarker(courier_markerOptions);
+                            aMap.moveCamera(CameraUpdateFactory.changeLatLng(courier_latLng));
+                        }
+                    });
+                    handler.postDelayed(this, 4000);// 4s 上传一次
+                }
+            };
+            handler.postDelayed(runnable, 4000);//每4s执行一次runnable.
+//        handler.removeCallbacks(runnable);
+        }
     }
 
     @Override

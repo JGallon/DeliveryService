@@ -133,7 +133,7 @@ public class DisplayActivity extends AppCompatActivity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                AVObject upload = AVObject.createWithoutData("_User", AVUser.getCurrentUser().getObjectId());
+                AVObject upload = AVObject.createWithoutData("Position", AVUser.getCurrentUser().getString("positionID"));
                 upload.put("lng", mylng);
                 upload.put("lat", mylat);
                 upload.saveInBackground(new SaveCallback() {
@@ -194,7 +194,8 @@ public class DisplayActivity extends AppCompatActivity {
 //                            Toast.makeText(DisplayActivity.this, ((Nameable) drawerItem).getName().getText(DisplayActivity.this), Toast.LENGTH_SHORT).show();
                         if (drawerItem.getIdentifier() == 1) {
 //                            Toast.makeText(DisplayActivity.this, drawerItem.getIdentifier() + "", Toast.LENGTH_SHORT).show();
-                            transaction.replace(R.id.frame_container, test);
+                            OrderFragment orderFragment = new OrderFragment();
+                            transaction.replace(R.id.frame_container, orderFragment);
                             transaction.commit();
                         } else if (drawerItem.getIdentifier() == 2) {
 
