@@ -47,11 +47,15 @@ import cn.leancloud.chatkit.utils.LCIMConstants;
 
 public class OrderDetailActivity extends AppCompatActivity {
 
+    private final int requestCode = 14;
     private MapView mMapView = null;
     private AMap aMap = null;
     private int state = -1;
     private int flag = -1;
-
+    private StateButton btn = null;
+    private RatingBar ratingBar = null;
+    private TextView ratinginfo = null;
+    private TextView comment = null;
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -81,13 +85,13 @@ public class OrderDetailActivity extends AppCompatActivity {
         TextView note = (TextView) findViewById(R.id.note);
         TextView courier = (TextView) findViewById(R.id.courier);
         TextView date = (TextView) findViewById(R.id.date);
-        StateButton btn = (StateButton) findViewById(R.id.button);
+        btn = (StateButton) findViewById(R.id.button);
         final TextView errortxt = (TextView) findViewById(R.id.error);
         final LinearLayout ratingbarlayout = (LinearLayout) findViewById(R.id.ratingbarlayout);
-        RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar_order);
-        TextView ratinginfo = (TextView) findViewById(R.id.order_rating_info);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar_order);
+        ratinginfo = (TextView) findViewById(R.id.order_rating_info);
         final LinearLayout commentlayout = (LinearLayout) findViewById(R.id.commentlayout);
-        TextView comment = (TextView) findViewById(R.id.comment);
+        comment = (TextView) findViewById(R.id.comment);
         final TextView statetxt = (TextView) findViewById(R.id.state);
         ImageView chat = (ImageView) findViewById(R.id.chat);
         state = beanOrder.getState();
@@ -135,7 +139,8 @@ public class OrderDetailActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("order", beanOrder);
                     cmtIntent.putExtras(bundle);
-                    startActivity(cmtIntent);
+//                    startActivity(cmtIntent);
+                    startActivityForResult(cmtIntent, requestCode);
                 }
             }
         });
@@ -282,5 +287,19 @@ public class OrderDetailActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case RESULT_OK: {//接收并显示Activity传过来的值
+                Bundle bundle = data.getExtras();
+                BeanOrder beanOrder = (BeanOrder) bundle.getSerializable("order");
+                flag = 1;
+                btn.setVisibility(View.GONE);
+                comment.setText(beanOrder.getComment());
+                ratingBar.setRating((float) beanOrder.getRate());
+                ratinginfo.setText(beanOrder.getRate() + "");
+                break;
+            }
+            default:
+                break;
+        }
     }
 }
