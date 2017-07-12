@@ -164,8 +164,11 @@ public class AddFragment extends Fragment {
                         // your action here
                         if (edt.getText().toString().equals("")) {
                             list.clear();
-                            list.add("item");
+                            list.add("No result");
+                            showListPopulWindow();
+                            edt.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.arrow_up), null);
                         } else {
+                            list.clear();
                             PoiSearch.Query query = new PoiSearch.Query(edt.getText().toString(), "", "");
                             query.setPageSize(14);// 设置每页最多返回多少条poiitem
                             query.setPageNum(0);//设置查询页码
@@ -175,12 +178,15 @@ public class AddFragment extends Fragment {
                                 public void onPoiSearched(PoiResult poiResult, int i) {
                                     int pagenum = poiResult.getPageCount();
                                     ArrayList<PoiItem> tmp = poiResult.getPois();
-                                    list.clear();
                                     for (int j = 0; j < tmp.size(); j++) {
                                         PoiItem item = tmp.get(j);
                                         String s = item.getProvinceName() + item.toString();
                                         list.add(s);
                                     }
+                                    if (tmp.size() == 0)
+                                        list.add("No result");
+                                    showListPopulWindow();
+                                    edt.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.arrow_up), null);
                                 }
 
                                 @Override
@@ -190,8 +196,6 @@ public class AddFragment extends Fragment {
                             });
                             poiSearch.searchPOIAsyn();
                         }
-                        showListPopulWindow();
-                        edt.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.arrow_up), null);
                         return true;
                     }
                 }

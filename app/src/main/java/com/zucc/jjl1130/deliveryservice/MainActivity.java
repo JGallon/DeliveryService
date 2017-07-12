@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVUser;
 
 import butterknife.BindView;
 
@@ -29,8 +30,13 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
+                if (AVUser.getCurrentUser() == null) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }

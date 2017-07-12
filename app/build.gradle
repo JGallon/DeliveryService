@@ -52,5 +52,6 @@ dependencies {
     compile 'com.mikepenz:google-material-typeface:3.0.1.0.original@aar'
     compile 'com.mikepenz:crossfadedrawerlayout:1.0.0@aar'
     compile 'com.android.support:support-v4:26.+'
+    compile 'cn.leancloud.android:chatkit:1.0.0'
     testCompile 'junit:junit:4.12'
 }

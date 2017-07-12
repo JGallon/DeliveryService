@@ -3,7 +3,6 @@ package com.zucc.jjl1130.deliveryservice;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -32,7 +31,6 @@ import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.MiniDrawer;
-import com.mikepenz.materialdrawer.holder.BadgeStyle;
 import com.mikepenz.materialdrawer.interfaces.ICrossfader;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
@@ -130,7 +128,7 @@ public class DisplayActivity extends AppCompatActivity {
 //        目前手机设备在长时间黑屏或锁屏时CPU会休眠，这导致定位SDK不能正常进行位置更新。若您有锁屏状态下获取位置的需求，您可以应用alarmManager实现1个可叫醒CPU的Timer，定时请求定位。
 
         final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
+        final Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 AVObject upload = AVObject.createWithoutData("Position", AVUser.getCurrentUser().getString("positionID"));
@@ -176,7 +174,7 @@ public class DisplayActivity extends AppCompatActivity {
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName("My Home").withIcon(R.drawable.ic_home).withSelectedIcon(R.drawable.ic_home_selected).withIdentifier(8),
                         new PrimaryDrawerItem().withName("My Orders").withIcon(R.drawable.ic_order).withSelectedIcon(R.drawable.ic_order_selected).withIdentifier(1),
-                        new PrimaryDrawerItem().withName("My Tasks").withIcon(R.drawable.ic_delivery).withSelectedIcon(R.drawable.ic_delivery_selected).withBadge("22").withBadgeStyle(new BadgeStyle(Color.RED, Color.RED)).withIdentifier(2),
+                        new PrimaryDrawerItem().withName("My Tasks").withIcon(R.drawable.ic_delivery).withSelectedIcon(R.drawable.ic_delivery_selected).withIdentifier(2),//.withBadge("22").withBadgeStyle(new BadgeStyle(Color.RED, Color.RED))
                         new PrimaryDrawerItem().withName("Add Order").withIcon(R.drawable.ic_add).withSelectedIcon(R.drawable.ic_add_selected).withIdentifier(3),
                         new PrimaryDrawerItem().withName("Get Order").withIcon(R.drawable.ic_search).withSelectedIcon(R.drawable.ic_search_selected).withIdentifier(4),
 //                        new PrimaryDrawerItem().withDescription("A more complex sample").withName(R.string.drawer_item_advanced_drawer).withIcon(GoogleMaterial.Icon.gmd_adb).withIdentifier(5),
@@ -198,7 +196,9 @@ public class DisplayActivity extends AppCompatActivity {
                             transaction.replace(R.id.frame_container, orderFragment);
                             transaction.commit();
                         } else if (drawerItem.getIdentifier() == 2) {
-
+                            TaskFragment taskFragment = new TaskFragment();
+                            transaction.replace(R.id.frame_container, taskFragment);
+                            transaction.commit();
                         } else if (drawerItem.getIdentifier() == 3) {
                             AddFragment addFragment = new AddFragment();
                             transaction.replace(R.id.frame_container, addFragment);
@@ -214,9 +214,10 @@ public class DisplayActivity extends AppCompatActivity {
                         } else if (drawerItem.getIdentifier() == 7) {
                             AVUser.logOut();
                             startActivity(new Intent(DisplayActivity.this, LoginActivity.class));
-                            DisplayActivity.this.finish();
+                            handler.removeCallbacks(runnable);
 //                            mLocationClient.stopLocation();//停止定位后，本地定位服务并不会被销毁
-//                            mLocationClient.onDestroy();//销毁定位客户端，同时销毁本地定位服务。
+                            mLocationClient.onDestroy();//销毁定位客户端，同时销毁本地定位服务。
+                            DisplayActivity.this.finish();
                         } else if (drawerItem.getIdentifier() == 8) {
                             transaction.replace(R.id.frame_container, welcomeFragment);
                             transaction.commit();

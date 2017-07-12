@@ -27,6 +27,7 @@
     <!-- android:windowSoftInputMode="stateVisible|adjustResize" -->
     <!-- 基础模块 END -->
     <application
+        android:name=".ChatApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_app"
         android:label="@string/app_name"
@@ -72,7 +73,9 @@
             android:name=".DisplayActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".GetDetailActivity" />
-        <activity android:name=".OrderDetailActivity"></activity>
+        <activity android:name=".OrderDetailActivity" />
+        <activity android:name=".CommentActivity" />
+        <activity android:name=".TaskDetailActivity"></activity>
     </application>
 
 </manifest>

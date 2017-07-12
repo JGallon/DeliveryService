@@ -12,8 +12,6 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,11 +22,11 @@ import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
+//    @Override
+//    public boolean onSupportNavigateUp() {
+//        onBackPressed();
+//        return true;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +35,13 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.md_white_1000));
-        getSupportActionBar().setHomeAsUpIndicator(
-                new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back)
-                        .sizeDp(16).color(ContextCompat.getColor(this, R.color.md_white_1000))
-        );
+//        getSupportActionBar().setHomeAsUpIndicator(
+//                new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back)
+//                        .sizeDp(16).color(ContextCompat.getColor(this, R.color.md_white_1000))
+//        );
         getSupportActionBar().setTitle("Login");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
         TextView register = (TextView) findViewById(R.id.register);
         register.setOnClickListener(new View.OnClickListener() {
             @Override

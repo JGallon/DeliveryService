@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.zucc.jjl1130.deliveryservice.OrderDetailActivity">
+    tools:context="com.zucc.jjl1130.deliveryservice.TaskDetailActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/toolbarlayout"
@@ -56,8 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="24dp"
                     android:layout_marginRight="24dp"
-                    android:layout_marginTop="24dp"
-                    android:visibility="gone">
+                    android:layout_marginTop="24dp">
 
                     <RatingBar
                         android:id="@+id/ratingBar_order"
@@ -95,13 +94,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Courier: "
+                        android:text="Client: "
                         android:textColor="@color/md_grey_500"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/courier"
+                        android:id="@+id/client"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="xxxx"

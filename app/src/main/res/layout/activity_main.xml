@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:text="Welcome to DS"
+            android:textColor="@color/white"
             android:textSize="24sp" />
 
         <TextView
@@ -39,6 +40,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:text="This is an application to provide purchasing services. Let's start using it."
+            android:textColor="@color/white"
             android:textSize="16dp" />
 
         <Button
@@ -62,6 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="copyright © 2017-2018"
+            android:textColor="@color/white"
             android:textSize="12sp" />
     </LinearLayout>
 
