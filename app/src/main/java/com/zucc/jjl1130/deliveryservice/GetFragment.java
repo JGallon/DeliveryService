@@ -1,6 +1,7 @@
 package com.zucc.jjl1130.deliveryservice;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -38,6 +39,7 @@ public class GetFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_get, container, false);
         listview = (RecyclerView) view.findViewById(R.id.get_list);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
+        swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.RED);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

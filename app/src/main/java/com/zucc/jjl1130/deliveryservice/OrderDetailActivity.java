@@ -130,7 +130,11 @@ public class OrderDetailActivity extends AppCompatActivity {
                     upload.put("state", 3);
                     upload.saveInBackground();
                     state = 3;
+                    btn.setText("Comment");
                     statetxt.setText("finished");
+                    ratingBar.setRating((float) 0.0);
+                    ratinginfo.setText("No ratings");
+                    comment.setText("Empty");
                     commentlayout.setVisibility(View.VISIBLE);
                     ratingbarlayout.setVisibility(View.VISIBLE);
                 } else if (state == 3) {
@@ -293,7 +297,10 @@ public class OrderDetailActivity extends AppCompatActivity {
                 BeanOrder beanOrder = (BeanOrder) bundle.getSerializable("order");
                 flag = 1;
                 btn.setVisibility(View.GONE);
-                comment.setText(beanOrder.getComment());
+                if (beanOrder.getComment().equals(""))
+                    comment.setText("Empty");
+                else
+                    comment.setText(beanOrder.getComment());
                 ratingBar.setRating((float) beanOrder.getRate());
                 ratinginfo.setText(beanOrder.getRate() + "");
                 break;

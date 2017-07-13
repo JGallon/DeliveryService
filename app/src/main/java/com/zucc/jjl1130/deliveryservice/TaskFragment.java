@@ -1,8 +1,10 @@
 package com.zucc.jjl1130.deliveryservice;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,18 +24,55 @@ import java.util.List;
 public class TaskFragment extends Fragment {
 
     private RecyclerView listview = null;
-    private List<BeanOrder> orderlist = null;
+    private OrderAdapter orderAdapter = null;
+    private SwipeRefreshLayout swipeRefreshLayout = null;
 
     @Override
     public void onResume() {
         super.onResume();
-        orderlist = new ArrayList<>();
+        refresh();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_task, container, false);
+        listview = (RecyclerView) view.findViewById(R.id.order_list);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
+        swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.RED);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+        orderAdapter = new OrderAdapter(getContext());
+        orderAdapter.setOnItemClickListener(new OrderAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BeanOrder beanOrder) {
+                Intent intent = new Intent(getActivity(), TaskDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("order", beanOrder);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+        listview.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        listview.setAdapter(orderAdapter);
+        return view;
+    }
+
+    private void refresh() {
+        swipeRefreshLayout.setRefreshing(true);
         AVQuery<AVObject> query = new AVQuery<>("Order");
         query.whereEqualTo("courier", AVUser.getCurrentUser().getObjectId());
         query.orderByAscending("state");// 升序
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
+                List<BeanOrder> orderlist = new ArrayList<>();
                 Log.e("size", list.size() + "");
                 for (int i = 0; i < list.size(); i++) {
                     AVObject tmp = list.get(i);
@@ -57,30 +96,10 @@ public class TaskFragment extends Fragment {
                     order.setComment(tmp.getString("comment"));
                     orderlist.add(order);
                 }
-                OrderAdapter orderAdapter = new OrderAdapter(getContext(), orderlist);
-                orderAdapter.setOnItemClickListener(new OrderAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(BeanOrder beanOrder) {
-                        Intent intent = new Intent(getActivity(), TaskDetailActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("order", beanOrder);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
-                });
-                listview.setLayoutManager(
-                        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                listview.setAdapter(orderAdapter);
+                orderAdapter.setDate(orderlist);
+                orderAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_task, container, false);
-        listview = (RecyclerView) view.findViewById(R.id.order_list);
-        return view;
     }
 }

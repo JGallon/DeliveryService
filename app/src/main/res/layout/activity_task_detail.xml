@@ -56,7 +56,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="24dp"
                     android:layout_marginRight="24dp"
-                    android:layout_marginTop="24dp">
+                    android:layout_marginTop="24dp"
+                    android:visibility="gone">
 
                     <RatingBar
                         android:id="@+id/ratingBar_order"

@@ -18,6 +18,7 @@ import com.amap.api.services.geocoder.RegeocodeAddress;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -30,7 +31,7 @@ import static com.zucc.jjl1130.deliveryservice.R.id.user;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
     private Context mcontext;
-    private List<BeanOrder> mlist;
+    private List<BeanOrder> mlist = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
 
     public OrderAdapter(Context context, List<BeanOrder> list) {
