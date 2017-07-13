@@ -39,6 +39,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         Log.e("list", mlist.size() + "");
     }
 
+    public OrderAdapter(Context context) {
+        mcontext = context;
+    }
+
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }

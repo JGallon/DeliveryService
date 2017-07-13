@@ -232,7 +232,7 @@ public class AddFragment extends Fragment {
             public void onMapClick(LatLng latLng) {
                 aMap.clear();
                 MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_click_position));
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.begin_point));
                 markerOptions.position(latLng);
                 aMap.addMarker(markerOptions);
                 aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));

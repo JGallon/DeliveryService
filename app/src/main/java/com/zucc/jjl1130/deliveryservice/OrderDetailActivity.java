@@ -213,12 +213,12 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         MarkerOptions start_markerOptions = new MarkerOptions();
 //        start_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_start_point));
-        start_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_start_point));
+        start_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.begin_point));
         LatLng start_latLng = new LatLng(beanOrder.getStartlat(), beanOrder.getStartlng());
         start_markerOptions.position(start_latLng);
         aMap.addMarker(start_markerOptions);
         MarkerOptions end_markerOptions = new MarkerOptions();
-        end_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end_point));
+        end_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_point));
         LatLng end_latLng = new LatLng(beanOrder.getEndlat(), beanOrder.getEndlng());
         end_markerOptions.position(end_latLng);
         aMap.addMarker(end_markerOptions);
@@ -231,7 +231,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                 public void done(List<AVObject> list, AVException e) {
                     AVObject tmp = list.get(0);
                     MarkerOptions courier_markerOptions = new MarkerOptions();
-                    courier_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end_point));
+                    courier_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.position));
                     LatLng courier_latLng = new LatLng(tmp.getDouble("lat"), tmp.getDouble("lng"));
                     courier_markerOptions.position(courier_latLng);
                     aMap.addMarker(courier_markerOptions);
@@ -244,12 +244,12 @@ public class OrderDetailActivity extends AppCompatActivity {
                 public void run() {
                     aMap.clear();
                     MarkerOptions start_markerOptions = new MarkerOptions();
-                    start_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_start_point));
+                    start_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.begin_point));
                     LatLng start_latLng = new LatLng(beanOrder.getStartlat(), beanOrder.getStartlng());
                     start_markerOptions.position(start_latLng);
                     aMap.addMarker(start_markerOptions);
                     MarkerOptions end_markerOptions = new MarkerOptions();
-                    end_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end_point));
+                    end_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_point));
                     LatLng end_latLng = new LatLng(beanOrder.getEndlat(), beanOrder.getEndlng());
                     end_markerOptions.position(end_latLng);
                     aMap.addMarker(end_markerOptions);
@@ -260,7 +260,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                         public void done(List<AVObject> list, AVException e) {
                             AVObject tmp = list.get(0);
                             MarkerOptions courier_markerOptions = new MarkerOptions();
-                            courier_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end_point));
+                            courier_markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.position));
                             LatLng courier_latLng = new LatLng(tmp.getDouble("lat"), tmp.getDouble("lng"));
                             courier_markerOptions.position(courier_latLng);
                             aMap.addMarker(courier_markerOptions);

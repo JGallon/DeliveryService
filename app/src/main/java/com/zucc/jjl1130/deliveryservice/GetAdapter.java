@@ -17,6 +17,7 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -28,13 +29,17 @@ import butterknife.ButterKnife;
 public class GetAdapter extends RecyclerView.Adapter<GetAdapter.ViewHolder> {
 
     private Context mcontext;
-    private List<BeanOrder> mlist;
+    private List<BeanOrder> mlist = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
 
     public GetAdapter(Context context, List<BeanOrder> list) {
         mcontext = context;
         mlist = list;
         Log.e("list", mlist.size() + "");
+    }
+
+    public GetAdapter(Context context) {
+        mcontext = context;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

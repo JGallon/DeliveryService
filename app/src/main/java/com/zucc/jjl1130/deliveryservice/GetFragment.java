@@ -3,6 +3,7 @@ package com.zucc.jjl1130.deliveryservice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,18 +22,55 @@ import java.util.List;
 public class GetFragment extends Fragment {
 
     private RecyclerView listview = null;
-    private List<BeanOrder> orderlist = null;
+    private GetAdapter getAdapter = null;
+    private SwipeRefreshLayout swipeRefreshLayout = null;
 
     @Override
     public void onResume() {
         super.onResume();
-        orderlist = new ArrayList<>();
+        refresh();
+    }
+
+    @Override
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_get, container, false);
+        listview = (RecyclerView) view.findViewById(R.id.get_list);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+//        orderlist = new ArrayList<>();
+        getAdapter = new GetAdapter(getContext());
+        getAdapter.setOnItemClickListener(new GetAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BeanOrder beanOrder) {
+                Intent intent = new Intent(getActivity(), GetDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("order", beanOrder);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+        listview.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        listview.setAdapter(getAdapter);
+        return view;
+    }
+
+    private void refresh() {
+        swipeRefreshLayout.setRefreshing(true);
         AVQuery<AVObject> query = new AVQuery<>("Order");
         query.whereEqualTo("state", 0);
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 Log.e("size", list.size() + "");
+                List<BeanOrder> orderlist = new ArrayList<BeanOrder>();
                 for (int i = 0; i < list.size(); i++) {
                     AVObject tmp = list.get(i);
                     BeanOrder order = new BeanOrder();
@@ -50,30 +88,11 @@ public class GetFragment extends Fragment {
                     order.setPay(tmp.getDouble("pay"));
                     orderlist.add(order);
                 }
-                GetAdapter getAdapter = new GetAdapter(getContext(), orderlist);
-                getAdapter.setOnItemClickListener(new GetAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(BeanOrder beanOrder) {
-                        Intent intent = new Intent(getActivity(), GetDetailActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("order", beanOrder);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
-                });
-                listview.setLayoutManager(
-                        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                listview.setAdapter(getAdapter);
+                getAdapter.setDate(orderlist);
+                getAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+
             }
         });
-    }
-
-    @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_get, container, false);
-        listview = (RecyclerView) view.findViewById(R.id.get_list);
-        return view;
     }
 }

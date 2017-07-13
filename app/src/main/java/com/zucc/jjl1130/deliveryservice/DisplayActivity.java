@@ -60,7 +60,6 @@ public class DisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
         initGPS();
-        final BlankFragment test = new BlankFragment();
         final WelcomeFragment welcomeFragment = new WelcomeFragment();
         setDefaultFragment(welcomeFragment);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -178,8 +177,9 @@ public class DisplayActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName("Add Order").withIcon(R.drawable.ic_add).withSelectedIcon(R.drawable.ic_add_selected).withIdentifier(3),
                         new PrimaryDrawerItem().withName("Get Order").withIcon(R.drawable.ic_search).withSelectedIcon(R.drawable.ic_search_selected).withIdentifier(4),
 //                        new PrimaryDrawerItem().withDescription("A more complex sample").withName(R.string.drawer_item_advanced_drawer).withIcon(GoogleMaterial.Icon.gmd_adb).withIdentifier(5),
-                        new PrimaryDrawerItem().withName("My Share").withIcon(R.drawable.ic_share).withSelectedIcon(R.drawable.ic_share_selected).withIdentifier(5),
+//                        new PrimaryDrawerItem().withName("My Share").withIcon(R.drawable.ic_share).withSelectedIcon(R.drawable.ic_share_selected).withIdentifier(5),
                         new SectionDrawerItem().withName("Setting"),
+                        new SecondaryDrawerItem().withName("Share APP").withIcon(R.drawable.ic_share).withIdentifier(5),
                         new SecondaryDrawerItem().withName("User Info").withIcon(R.drawable.ic_userinfo).withIdentifier(6),
                         new SecondaryDrawerItem().withName("Log Out").withIcon(R.drawable.ic_logout).withIdentifier(7)
                 ) // add the items we want to use with our Drawer
@@ -208,9 +208,16 @@ public class DisplayActivity extends AppCompatActivity {
                             transaction.replace(R.id.frame_container, getFragment);
                             transaction.commit();
                         } else if (drawerItem.getIdentifier() == 5) {
-                            result.setSelection(4, true);
+                            String shareBody = "I am using this app, coming together with me!";
+                            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                            sharingIntent.setType("text/plain");
+                            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "DeliveryService");
+                            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                            startActivity(Intent.createChooser(sharingIntent, "APP"));
                         } else if (drawerItem.getIdentifier() == 6) {
-
+                            UserFragment userFragment = new UserFragment();
+                            transaction.replace(R.id.frame_container, userFragment);
+                            transaction.commit();
                         } else if (drawerItem.getIdentifier() == 7) {
                             AVUser.logOut();
                             startActivity(new Intent(DisplayActivity.this, LoginActivity.class));
