@@ -68,6 +68,7 @@ public class GetFragment extends Fragment {
         swipeRefreshLayout.setRefreshing(true);
         AVQuery<AVObject> query = new AVQuery<>("Order");
         query.whereEqualTo("state", 0);
+//        query.whereNotEqualTo("user", AVUser.getCurrentUser().getObjectId());
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {

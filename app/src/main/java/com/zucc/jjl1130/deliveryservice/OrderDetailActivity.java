@@ -38,7 +38,6 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import cn.leancloud.chatkit.LCChatKit;
@@ -109,8 +108,11 @@ public class OrderDetailActivity extends AppCompatActivity {
             if (flag == 1) {
                 btn.setVisibility(View.GONE);
                 ratingBar.setRating((float) beanOrder.getRate());
-                ratinginfo.setText(beanOrder.getRate() + "");
-                comment.setText(beanOrder.getComment());
+                ratinginfo.setText(String.format("%.1f", beanOrder.getRate()));
+                if (beanOrder.getComment().equals(""))
+                    comment.setText("Empty");
+                else
+                    comment.setText(beanOrder.getComment());
             } else {
                 btn.setText("Comment");
                 ratingBar.setRating((float) 0.0);
@@ -185,8 +187,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 200, GeocodeSearch.AMAP);
         geocodeSearch.getFromLocationAsyn(query);
         original.setText(beanOrder.getDescription());
-        DecimalFormat df = new DecimalFormat("#.00");
-        salary.setText(df.format(beanOrder.getPay()));
+//        DecimalFormat df = new DecimalFormat("#.00");
+        salary.setText(String.format("%.2f", beanOrder.getPay()));
         note.setText(beanOrder.getDetail());
         courier.setText(beanOrder.getCouriername());
         date.setText(beanOrder.getCreatedate() + "");
@@ -302,7 +304,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                 else
                     comment.setText(beanOrder.getComment());
                 ratingBar.setRating((float) beanOrder.getRate());
-                ratinginfo.setText(beanOrder.getRate() + "");
+                ratinginfo.setText(String.format("%.1f", beanOrder.getRate()));
                 break;
             }
             default:

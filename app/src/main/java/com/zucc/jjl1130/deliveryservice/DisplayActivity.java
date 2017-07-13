@@ -279,30 +279,30 @@ public class DisplayActivity extends AppCompatActivity {
          * this animate the height of the profile to the height of the AccountHeader and
          * animates the height of the drawerItems to the normal drawerItems so the difference between Mini and normal Drawer is eliminated
          **/
-        /*
-        final double headerHeight = DrawerUIUtils.getOptimalDrawerWidth(this) * 9d / 16d;
-        final double originalProfileHeight = UIUtils.convertDpToPixel(72, this);
-        final double headerDifference = headerHeight - originalProfileHeight;
-        final double originalItemHeight = UIUtils.convertDpToPixel(64, this);
-        final double normalItemHeight = UIUtils.convertDpToPixel(48, this);
-    final double itemDifference = originalItemHeight - normalItemHeight;
-        crossfadeDrawerLayout.withCrossfadeListener(new CrossfadeDrawerLayout.CrossfadeListener() {
-@Override
-public void onCrossfade(View containerView, float currentSlidePercentage, int slideOffset) {
-        for (int i = 0; i < miniResult.getAdapter().getItemCount(); i++) {
-        IDrawerItem drawerItem = miniResult.getAdapter().getItem(i);
-        if (drawerItem instanceof MiniProfileDrawerItem) {
-        MiniProfileDrawerItem mpdi = (MiniProfileDrawerItem) drawerItem;
-        mpdi.withCustomHeightPx((int) (originalProfileHeight + (headerDifference * currentSlidePercentage / 100)));
-        } else if (drawerItem instanceof MiniDrawerItem) {
-        MiniDrawerItem mdi = (MiniDrawerItem) drawerItem;
-        mdi.withCustomHeightPx((int) (originalItemHeight - (itemDifference * currentSlidePercentage / 100)));
-        }
-        }
-        miniResult.getAdapter().notifyDataSetChanged();
-        }
-        });
-        */
+
+//        final double headerHeight = DrawerUIUtils.getOptimalDrawerWidth(this) * 9d / 16d;
+//        final double originalProfileHeight = UIUtils.convertDpToPixel(72, this);
+//        final double headerDifference = headerHeight - originalProfileHeight;
+//        final double originalItemHeight = UIUtils.convertDpToPixel(64, this);
+//        final double normalItemHeight = UIUtils.convertDpToPixel(48, this);
+//        final double itemDifference = originalItemHeight - normalItemHeight;
+//        crossfadeDrawerLayout.withCrossfadeListener(new CrossfadeDrawerLayout.CrossfadeListener() {
+//            @Override
+//            public void onCrossfade(View containerView, float currentSlidePercentage, int slideOffset) {
+//                for (int i = 0; i < miniResult.getAdapter().getItemCount(); i++) {
+//                    IDrawerItem drawerItem = miniResult.getAdapter().getItem(i);
+//                    if (drawerItem instanceof MiniProfileDrawerItem) {
+//                        MiniProfileDrawerItem mpdi = (MiniProfileDrawerItem) drawerItem;
+//                        mpdi.withCustomHeightPx((int) (originalProfileHeight + (headerDifference * currentSlidePercentage / 100)));
+//                    } else if (drawerItem instanceof MiniDrawerItem) {
+//                        MiniDrawerItem mdi = (MiniDrawerItem) drawerItem;
+//                        mdi.withCustomHeightPx((int) (originalItemHeight - (itemDifference * currentSlidePercentage / 100)));
+//                    }
+//                }
+//                miniResult.getAdapter().notifyDataSetChanged();
+//            }
+//        });
+
     }
 
     @Override

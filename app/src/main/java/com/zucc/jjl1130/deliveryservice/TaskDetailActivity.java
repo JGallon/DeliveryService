@@ -33,8 +33,6 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-import java.text.DecimalFormat;
-
 import cn.leancloud.chatkit.LCChatKit;
 import cn.leancloud.chatkit.activity.LCIMConversationActivity;
 import cn.leancloud.chatkit.utils.LCIMConstants;
@@ -109,8 +107,11 @@ public class TaskDetailActivity extends AppCompatActivity {
             if (flag == 1) {
 //                btn.setVisibility(View.GONE);
                 ratingBar.setRating((float) beanOrder.getRate());
-                ratinginfo.setText(beanOrder.getRate() + "");
-                comment.setText(beanOrder.getComment());
+                ratinginfo.setText(String.format("%.1f", beanOrder.getRate()));
+                if (beanOrder.getComment().equals(""))
+                    comment.setText("Empty");
+                else
+                    comment.setText(beanOrder.getComment());
             } else {
 //                btn.setText("Comment");
                 ratingBar.setRating((float) 0.0);
@@ -171,8 +172,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 200, GeocodeSearch.AMAP);
         geocodeSearch.getFromLocationAsyn(query);
         original.setText(beanOrder.getDescription());
-        DecimalFormat df = new DecimalFormat("#.00");
-        salary.setText(df.format(beanOrder.getPay()));
+//        DecimalFormat df = new DecimalFormat("#.00");
+        salary.setText(String.format("%.2f", beanOrder.getPay()));
         note.setText(beanOrder.getDetail());
         client.setText(beanOrder.getUsername());
         date.setText(beanOrder.getCreatedate() + "");

@@ -16,7 +16,6 @@ import com.amap.api.services.geocoder.RegeocodeAddress;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,8 +78,8 @@ public class GetAdapter extends RecyclerView.Adapter<GetAdapter.ViewHolder> {
         LatLonPoint latLonPoint = new LatLonPoint(lat, lng);
         RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 200, GeocodeSearch.AMAP);
         geocodeSearch.getFromLocationAsyn(query);
-        DecimalFormat df = new DecimalFormat("#.00");
-        holder.salary.setText(df.format(beanOrder.getPay()));
+//        DecimalFormat df = new DecimalFormat("#.00");
+        holder.salary.setText(String.format("%.2f", beanOrder.getPay()));
         holder.note.setText(beanOrder.getDetail());
 //        holder.btn_get.setOnClickListener(new View.OnClickListener() {
 //            @Override

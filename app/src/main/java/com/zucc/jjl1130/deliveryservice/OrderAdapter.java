@@ -92,7 +92,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             holder.statelaout.setVisibility(View.GONE);
             holder.ratingbarlayout.setVisibility(View.VISIBLE);
             if (beanOrder.getFlag() == 1) {
-                holder.rateinfo.setText(beanOrder.getRate() + "");
+                holder.rateinfo.setText(String.format("%.1f", beanOrder.getRate()));
                 holder.rate.setRating((float) beanOrder.getRate());
             } else {
                 holder.rateinfo.setText("No ratings");
